@@ -1,0 +1,20 @@
+spring:
+  main:
+    banner-mode: "off"
+  tomcat:
+    max-wait: 20000
+    max-active: 50
+    max-idle: 20
+    min-idle: 15
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+jdbc:
+  url: jdbc:firebirdsql://localhost:3050/D:/pmbase.fdb
+
+server:
+  port: 9000
+
+logging:
+  config: config/logback.xml

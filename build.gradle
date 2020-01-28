@@ -1,0 +1,63 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id "java"
+    id "idea"
+    id "java-library-distribution"
+}
+
+ext {
+    projectName = "test-task-bobday"
+    versions = [
+            springBoot: "2.2.4.RELEASE",
+            lombok    : "1.18.10",
+            swagger   : "2.9.2",
+            hikariCP  : "3.4.2",
+            h2database: "1.4.200"
+    ]
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile platform("org.springframework.boot:spring-boot-dependencies:${versions.springBoot}")
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-jdbc"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "com.zaxxer:HikariCP:${versions.hikariCP}"
+    compile "com.h2database:h2:${versions.h2database}"
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    compile "io.springfox:springfox-swagger2:${versions.swagger}"
+    compile "io.springfox:springfox-swagger-ui:${versions.swagger}"
+    compile 'org.eclipse.persistence:javax.persistence:2.2.1'
+}
+
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": "com.vov.Main",
+                "Build-Timestamp": new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+                "Class-Path": configurations.runtime.files.collect { "lib/$it.name" }.join(" ")
+        )
+    }
+    archiveFileName = "${project.ext.projectName}.jar"
+}
+
+distributions {
+    main {
+        baseName = "${rootProject.name}"
+        contents {
+            into("config") {
+                from { "config" }
+            }
+        }
+    }
+}
