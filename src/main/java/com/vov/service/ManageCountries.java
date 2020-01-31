@@ -94,35 +94,16 @@ public class ManageCountries {
     if (country.getRegionalBlocs() != null && country.getRegionalBlocs().size() > 0) {
       Set<RegionalBlocDTO> regionalBlocDTOSet = new HashSet<>();
       for (RegionalBloc regionalBloc : country.getRegionalBlocs()) {
-        RegionalBlocDTO regionalBlocDTO = new RegionalBlocDTO();
-        regionalBlocDTO.setAcronym(regionalBloc.getAcronym());
-        regionalBlocDTO.setName(regionalBloc.getName());
-
-        if (regionalBloc.getOtherAcronyms() != null && regionalBloc.getOtherAcronyms().size() > 0) {
-          String[] arrayOtherAcronyms = new String[regionalBloc.getOtherAcronyms().size()];
-          int i = 0;
-          for (OtherAcronyms otherAcronyms : regionalBloc.getOtherAcronyms()) {
-            arrayOtherAcronyms[i] = otherAcronyms.getOtherAcronyms();
-            i++;
-          }
-          regionalBlocDTO.setOtherAcronyms(arrayOtherAcronyms);
-        }
-
-        if (regionalBloc.getOtherNames() != null && regionalBloc.getOtherNames().size() > 0) {
-          String[] arrayOtherNames = new String[regionalBloc.getOtherNames().size()];
-          int i = 0;
-          for (OtherNames otherNames : regionalBloc.getOtherNames()) {
-            arrayOtherNames[i] = otherNames.getOtherNames();
-            i++;
-          }
-          regionalBlocDTO.setOtherNames(arrayOtherNames);
-        }
-
+        RegionalBlocDTO regionalBlocDTO = new RegionalBlocDTO(
+                regionalBloc.getAcronym(),
+                regionalBloc.getName(),
+                regionalBloc.getOtherAcronyms().stream().map(OtherAcronyms::getOtherAcronyms).toArray(String[]::new),
+                regionalBloc.getOtherNames().stream().map(OtherNames::getOtherNames).toArray(String[]::new)
+        );
         regionalBlocDTOSet.add(regionalBlocDTO);
       }
       countryDTO.setRegionalBlocs(regionalBlocDTOSet);
     }
-
 
     return countryDTO;
   }
